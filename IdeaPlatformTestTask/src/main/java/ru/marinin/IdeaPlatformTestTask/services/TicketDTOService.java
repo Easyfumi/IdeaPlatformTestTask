@@ -30,6 +30,6 @@ public class TicketDTOService {
             ticketController.registerTicket(ticket);
         }
 
-        ticketController.doTask();
+        ticketController.doTasks();
     }
 }

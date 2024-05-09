@@ -17,11 +17,14 @@ public class TicketController {
         ticketService.registerTicket(ticket);
     }
 
-    public void doTask() {
+    public void doTasks() {
         try {
-            ticketService.task();
+            ticketService.minTimeTask();
+            ticketService.diffAvgAndMediane();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
     }
 }
