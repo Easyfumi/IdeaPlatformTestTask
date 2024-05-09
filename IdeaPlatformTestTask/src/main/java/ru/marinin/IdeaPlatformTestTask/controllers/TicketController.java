@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import ru.marinin.IdeaPlatformTestTask.models.Ticket;
 import ru.marinin.IdeaPlatformTestTask.services.TicketService;
 
+import java.io.IOException;
+
 @Controller
 @RequiredArgsConstructor
 public class TicketController {
@@ -16,6 +18,10 @@ public class TicketController {
     }
 
     public void doTask() {
-        ticketService.task();
+        try {
+            ticketService.task();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

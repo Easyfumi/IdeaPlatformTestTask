@@ -24,7 +24,7 @@ public class TicketService {
         return true;
     }
 
-    public void task() {
+    public void task() throws IOException {
 
         List<Ticket> ticketList = ticketRepository.findAll();
         Set<String> setCarriers = new HashSet<>();
@@ -33,13 +33,15 @@ public class TicketService {
             setCarriers.add(ticket.getCarrier());
         }
 
-        for (String s : setCarriers) {
-            List<Ticket> ticketListByCarrier = ticketRepository.findAllByCarrier(s);
-            findMinTime(ticketListByCarrier);
+        for (String carrier : setCarriers) {
+            List<Ticket> ticketListByCarrier = ticketRepository.findAllByCarrier(carrier);
+            answerToFile(findMinTime(ticketListByCarrier));
         }
+
+
     }
 
-    public void findMinTime(List<Ticket> ticketList) {
+    public String findMinTime(List<Ticket> ticketList) {
         List<Duration> durationList = new ArrayList<>();
 
         for (Ticket ticket : ticketList) {
@@ -59,14 +61,7 @@ public class TicketService {
         int hours = Integer.parseInt(min.toMinutes() / 60 + "");
         int minutes = Integer.parseInt(min.toMinutes() % 60 + "");
 
-        String answer = ticketList.get(0).getCarrier() + ": " + LocalTime.of(hours, minutes);
-
-        try {
-            answerToFile(answer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        return ticketList.get(0).getCarrier() + ": " + LocalTime.of(hours, minutes);
     }
 
     public void answerToFile(String answer) throws IOException {
