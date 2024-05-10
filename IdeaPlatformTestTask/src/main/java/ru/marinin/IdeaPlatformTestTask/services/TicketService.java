@@ -17,6 +17,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TicketService {
 
+
     private final TicketRepository ticketRepository;
 
     public boolean registerTicket(Ticket ticket) {
@@ -42,28 +43,25 @@ public class TicketService {
         int[] prices = ticketRepository.findPricesByCities("Владивосток", "Тель-Авив");
         int diff = ticketRepository.avgPriceByCities("Владивосток", "Тель-Авив") - findMedian(prices);
         answerToFile("diffAvgAndMediane: " + diff);
+
     }
 
     public String findMinTime(List<Ticket> ticketList) {
         List<Duration> durationList = new ArrayList<>();
-
         for (Ticket ticket : ticketList) {
             LocalDateTime localDateTimeDeparture = LocalDateTime.of(ticket.getDeparture_date(), ticket.getDeparture_time());
             LocalDateTime localDateTimeArrival = LocalDateTime.of(ticket.getArrival_date(), ticket.getArrival_time()).plusHours(7);
             Duration flightTime = Duration.between(localDateTimeDeparture, localDateTimeArrival);
             durationList.add(flightTime);
         }
-
         Duration min = durationList.get(0);
         for (Duration duration : durationList) {
             if (min.compareTo(duration) > 0) {
                 min = duration;
             }
         }
-
         int hours = Integer.parseInt(min.toMinutes() / 60 + "");
         int minutes = Integer.parseInt(min.toMinutes() % 60 + "");
-
         return ticketList.get(0).getCarrier() + ": " + LocalTime.of(hours, minutes);
     }
 

@@ -21,15 +21,11 @@ public class TicketDTOService {
         this.ticketController = ticketController;
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-
         File file = new File("IdeaPlatformTestTask/src/main/resources/tickets.json");
-
         TicketDTO tickets = objectMapper.readValue(file, TicketDTO.class);
-
         for (Ticket ticket : tickets.getTickets()) {
             ticketController.registerTicket(ticket);
         }
-
         ticketController.doTasks();
     }
 }
