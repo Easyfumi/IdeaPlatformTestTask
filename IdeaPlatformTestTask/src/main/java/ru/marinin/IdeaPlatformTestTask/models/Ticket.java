@@ -29,6 +29,8 @@ public class Ticket {
     private LocalDate arrival_date;
     @JsonFormat(pattern = "H:mm")
     private LocalTime arrival_time;
+    // я бы очень хотел сделать нормальный Carrier carrier с @ManyToOne и все такое, но завтра на работу,
+    // а он мне nullpointer кидает постоянно, поэтому нормализацию БД сделал вручную =(
     private String carrier;
     private int stops;
     private int price;

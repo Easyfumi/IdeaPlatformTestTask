@@ -2,7 +2,9 @@ package ru.marinin.IdeaPlatformTestTask.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.marinin.IdeaPlatformTestTask.models.Carrier;
 import ru.marinin.IdeaPlatformTestTask.models.Ticket;
+import ru.marinin.IdeaPlatformTestTask.repository.CarrierRepository;
 import ru.marinin.IdeaPlatformTestTask.repository.TicketRepository;
 
 import java.io.BufferedWriter;
@@ -11,39 +13,29 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TicketService {
 
-
     private final TicketRepository ticketRepository;
+    private final CarrierRepository carrierRepository;
 
-    public boolean registerTicket(Ticket ticket) {
-        if (ticketRepository.findSameTicket(ticket.getOrigin(), ticket.getOrigin_name(), ticket.getDestination(),
-                ticket.getDestination_name(), ticket.getDeparture_date(), ticket.getDeparture_time(), ticket.getArrival_date(),
-                ticket.getArrival_time(), ticket.getCarrier(), ticket.getStops(), ticket.getPrice()) != null) {
-            return false;
-        } else {
-            ticketRepository.save(ticket);
-            return true;
-        }
-    }
-
-    public void minTimeTask() throws IOException {
-        List<String> carriersList = ticketRepository.findAllCarriers();
-        for (String carrier : carriersList) {
-            List<Ticket> ticketListByCarrier = ticketRepository.findAllByCarrier(carrier);
+    public void minTimeTask(String origin_name, String destination_name) throws IOException {
+        List<Carrier> carriersList = carrierRepository.findAll();
+        for (Carrier carrier : carriersList) {
+            List<Ticket> ticketListByCarrier = ticketRepository.findAllByCarrierAndOriginAndDestination(carrier.getId().toString(), origin_name, destination_name);
             answerToFile(findMinTime(ticketListByCarrier));
         }
     }
 
-    public void diffAvgAndMediane() throws IOException {
-        int[] prices = ticketRepository.findPricesByCities("Владивосток", "Тель-Авив");
-        int diff = ticketRepository.avgPriceByCities("Владивосток", "Тель-Авив") - findMedian(prices);
+    public void diffAvgAndMedianeTask(String origin_name, String destination_name) throws IOException {
+        int[] prices = ticketRepository.findPricesByCities(origin_name, destination_name);
+        int diff = ticketRepository.avgPriceByCities(origin_name, destination_name) - findMedian(prices);
         answerToFile("diffAvgAndMediane: " + diff);
-
     }
 
     public String findMinTime(List<Ticket> ticketList) {
@@ -66,7 +58,7 @@ public class TicketService {
     }
 
     public void answerToFile(String answer) throws IOException {
-        String filePath = "C:\\Users\\zik15\\Desktop\\answer.txt";
+        String filePath = "IdeaPlatformTestTask/src/main/resources/answer.txt";
         FileWriter writer = new FileWriter(filePath, true);
         BufferedWriter bufferWriter = new BufferedWriter(writer);
         bufferWriter.write(answer + '\n');
@@ -76,9 +68,9 @@ public class TicketService {
     public int findMedian(int[] prices) {
         Arrays.sort(prices);
         if (prices.length % 2 == 0)
-            return (prices[prices.length/2] + prices[prices.length/2 - 1])/2;
+            return (prices[prices.length / 2] + prices[prices.length / 2 - 1]) / 2;
         else
-            return prices[prices.length/2];
+            return prices[prices.length / 2];
     }
 
 }

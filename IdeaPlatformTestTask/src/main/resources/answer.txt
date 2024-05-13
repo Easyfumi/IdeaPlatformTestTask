@@ -1,5 +1,0 @@
-TK: 09:30
-S7: 13:30
-SU: 08:40
-BA: 15:05
-diffAvgAndMediane: 460

@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.marinin.IdeaPlatformTestTask.models.Carrier;
 import ru.marinin.IdeaPlatformTestTask.models.Ticket;
+import ru.marinin.IdeaPlatformTestTask.repository.CarrierRepository;
 import ru.marinin.IdeaPlatformTestTask.repository.TicketRepository;
 import ru.marinin.IdeaPlatformTestTask.services.TicketService;
 
@@ -17,7 +19,9 @@ import java.util.List;
 public class TicketServiceTest {
     @Autowired
     TicketRepository ticketRepository;
-    private final TicketService ticketService = new TicketService(ticketRepository);
+    @Autowired
+    CarrierRepository carrierRepository;
+    private final TicketService ticketService = new TicketService(ticketRepository, carrierRepository);
 
     Ticket ticket1 = new Ticket(Long.valueOf(1), "VVO", "Владивосток", "TLV", "Тель-Авив",
             LocalDate.of(2012, 05, 18),
