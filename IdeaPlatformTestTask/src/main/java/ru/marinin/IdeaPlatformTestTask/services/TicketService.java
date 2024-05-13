@@ -31,13 +31,13 @@ public class TicketService {
         for (Carrier carrier : carriersList) {
             List<Ticket> ticketListByCarrier = ticketRepository.findAllByCarrierAndOriginAndDestination(carrier.getId().toString(), origin_name, destination_name);
 
-            answerToConsole(findMinTime(ticketListByCarrier));
+//            System.out.println(findMinTime(ticketListByCarrier));
 
-//            try {
-//                answerToFile(findMinTime(ticketListByCarrier));
-//            } catch (IOException e) {
-//                log.error("answerToFile in minTimeTask error: " + e);
-//            }
+            try {
+                answerToFile(findMinTime(ticketListByCarrier));
+            } catch (IOException e) {
+                log.error("answerToFile in minTimeTask error: " + e);
+            }
         }
     }
 
@@ -45,13 +45,13 @@ public class TicketService {
         int[] prices = ticketRepository.findPricesByCities(origin_name, destination_name);
         int diff = ticketRepository.avgPriceByCities(origin_name, destination_name) - findMedian(prices);
 
-        answerToConsole("diffAvgAndMediane: " + diff);
+//        System.out.println("diffAvgAndMediane: " + diff);
 
-//        try {
-//            answerToFile("diffAvgAndMediane: " + diff);
-//        } catch (IOException e) {
-//            log.error("answerToFile in diffAvgAndMedianeTask error: " + e);
-//        }
+        try {
+            answerToFile("diffAvgAndMediane: " + diff);
+        } catch (IOException e) {
+            log.error("answerToFile in diffAvgAndMedianeTask error: " + e);
+        }
     }
 
     public String findMinTime(List<Ticket> ticketList) {
@@ -74,17 +74,13 @@ public class TicketService {
         // в конкретной задаче optional не будет пустой, проверку не стал добавлять
     }
 
-    private void answerToConsole(String answer) {
-        System.out.println(answer + '\n');
+    private void answerToFile(String answer) throws IOException {
+        String filePath = "IdeaPlatformTestTask/src/main/resources/answer.txt";
+        FileWriter writer = new FileWriter(filePath, true);
+        BufferedWriter bufferWriter = new BufferedWriter(writer);
+        bufferWriter.write(answer + '\n');
+        bufferWriter.close();
     }
-
-//    private void answerToFile(String answer) throws IOException {
-//        String filePath = "IdeaPlatformTestTask/src/main/resources/answer.txt";
-//        FileWriter writer = new FileWriter(filePath, true);
-//        BufferedWriter bufferWriter = new BufferedWriter(writer);
-//        bufferWriter.write(answer + '\n');
-//        bufferWriter.close();
-//    }
 
     public int findMedian(int[] prices) {
         Arrays.sort(prices);
