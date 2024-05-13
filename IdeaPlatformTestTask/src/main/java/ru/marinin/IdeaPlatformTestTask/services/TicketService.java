@@ -1,6 +1,7 @@
 package ru.marinin.IdeaPlatformTestTask.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.marinin.IdeaPlatformTestTask.models.Carrier;
 import ru.marinin.IdeaPlatformTestTask.models.Ticket;
@@ -19,23 +20,32 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final CarrierRepository carrierRepository;
 
-    public void minTimeTask(String origin_name, String destination_name) throws IOException {
+    public void minTimeTask(String origin_name, String destination_name){
         List<Carrier> carriersList = carrierRepository.findAll();
         for (Carrier carrier : carriersList) {
             List<Ticket> ticketListByCarrier = ticketRepository.findAllByCarrierAndOriginAndDestination(carrier.getId().toString(), origin_name, destination_name);
-            answerToFile(findMinTime(ticketListByCarrier));
+            try {
+                answerToFile(findMinTime(ticketListByCarrier));
+            } catch (IOException e) {
+                log.error("answerToFile in minTimeTask error: " + e);
+            }
         }
     }
 
-    public void diffAvgAndMedianeTask(String origin_name, String destination_name) throws IOException {
+    public void diffAvgAndMedianeTask(String origin_name, String destination_name) {
         int[] prices = ticketRepository.findPricesByCities(origin_name, destination_name);
         int diff = ticketRepository.avgPriceByCities(origin_name, destination_name) - findMedian(prices);
-        answerToFile("diffAvgAndMediane: " + diff);
+        try {
+            answerToFile("diffAvgAndMediane: " + diff);
+        } catch (IOException e) {
+            log.error("answerToFile in diffAvgAndMedianeTask error: " + e);
+        }
     }
 
     public String findMinTime(List<Ticket> ticketList) {

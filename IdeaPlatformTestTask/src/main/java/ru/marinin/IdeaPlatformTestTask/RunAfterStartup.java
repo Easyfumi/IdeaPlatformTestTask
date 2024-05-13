@@ -18,26 +18,17 @@ public class RunAfterStartup {
 
     private final TicketService ticketService;
     private final CarrierService carrierService;
+
     @EventListener(ApplicationReadyEvent.class)
     public void registerTicket() {
+
         try {
             carrierService.init();
         } catch (IOException e) {
             log.error("init exception");
         }
 
-        try {
-            ticketService.minTimeTask("Владивосток", "Тель-Авив");
-        } catch (IOException e) {
-            log.error("minTimeTask exception");
-        }
-
-        try {
-            ticketService.diffAvgAndMedianeTask("Владивосток", "Тель-Авив");
-        } catch (IOException e) {
-            log.error("diffAvgAndMediane exception");
-        }
-
-
+        ticketService.minTimeTask("Владивосток", "Тель-Авив");
+        ticketService.diffAvgAndMedianeTask("Владивосток", "Тель-Авив");
     }
 }

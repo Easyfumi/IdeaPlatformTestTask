@@ -17,6 +17,10 @@ import java.util.List;
 
 
 public class TicketServiceTest {
+
+    // Сейчас идет курс по алгоритмам, после него будет Докер. Поэтому пока о нем знаю только в общих чертах
+    // и развернуть тестконтейнер для тестирования кастомных запросов пока не смог.
+
     @Autowired
     TicketRepository ticketRepository;
     @Autowired
@@ -62,7 +66,7 @@ public class TicketServiceTest {
     }
 
     @Test
-    @DisplayName("min time for every carrier")
+    @DisplayName("min time")
     void testMinTime() {
         List<Ticket> ticketList = new ArrayList<>();
         ticketList.add(ticket1);
