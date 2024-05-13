@@ -33,7 +33,7 @@ public class CarrierService {
         }
     }
 
-    public void registerCarrierAndTickets(Ticket ticket) {
+    private void registerCarrierAndTickets(Ticket ticket) {
         if (carrierRepository.findByName(ticket.getCarrier())==null) {
             carrierRepository.save(new Carrier(ticket.getCarrier()));
         }
