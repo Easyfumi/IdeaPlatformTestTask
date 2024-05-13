@@ -64,7 +64,8 @@ public class TicketService {
         }
         int hours = Integer.parseInt(min.toMinutes() / 60 + "");
         int minutes = Integer.parseInt(min.toMinutes() % 60 + "");
-        return ticketList.get(0).getCarrier() + ": " + LocalTime.of(hours, minutes);
+        return carrierRepository.findById(Long.valueOf(ticketList.get(0).getCarrier())).get().getName() + ": " + LocalTime.of(hours, minutes);
+        // в конкретной задаче optional не будет пустой, проверку не стал добавлять
     }
 
     public void answerToFile(String answer) throws IOException {
