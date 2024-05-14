@@ -18,7 +18,7 @@ import java.util.List;
 
 public class TicketServiceTest {
 
-    // Сейчас идет курс по алгоритмам, после него будет Докер. Поэтому пока о нем знаю только в общих чертах
+    // Сейчас изучаю алгоритмы, только после будет Докер. Поэтому пока о нем знаю только в общих чертах
     // и развернуть тестконтейнер для тестирования кастомных запросов пока не смог.
 
     @Autowired
@@ -72,8 +72,8 @@ public class TicketServiceTest {
         ticketList.add(ticket1);
         ticketList.add(ticket2);
         ticketList.add(ticket3);
-        String rez = ticketService.findMinTime(ticketList);
-        String currRez = "TK: 12:50";
+        LocalTime rez = ticketService.findMinTime(ticketList, 7);
+        LocalTime currRez = LocalTime.of(12, 50);
         Assertions.assertTrue(rez.equals(currRez));
     }
 }

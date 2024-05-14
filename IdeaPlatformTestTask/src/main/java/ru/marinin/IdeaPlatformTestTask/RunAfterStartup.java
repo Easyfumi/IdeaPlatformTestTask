@@ -28,7 +28,7 @@ public class RunAfterStartup {
             log.error("init exception");
         }
 
-        ticketService.minTimeTask("Владивосток", "Тель-Авив");
+        ticketService.minTimeTask("Владивосток", "Тель-Авив", 7);
         ticketService.diffAvgAndMedianeTask("Владивосток", "Тель-Авив");
     }
 }

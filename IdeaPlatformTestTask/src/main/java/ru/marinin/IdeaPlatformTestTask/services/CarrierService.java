@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.marinin.IdeaPlatformTestTask.models.Carrier;
 import ru.marinin.IdeaPlatformTestTask.models.Ticket;
 import ru.marinin.IdeaPlatformTestTask.models.TicketDTO;
@@ -33,6 +34,7 @@ public class CarrierService {
         }
     }
 
+    @Transactional
     private void registerCarrierAndTickets(Ticket ticket) {
         if (carrierRepository.findByName(ticket.getCarrier())==null) {
             carrierRepository.save(new Carrier(ticket.getCarrier()));

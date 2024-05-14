@@ -26,7 +26,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final CarrierRepository carrierRepository;
 
-    public void minTimeTask(String origin_name, String destination_name) {
+    public void minTimeTask(String origin_name, String destination_name, int diffTimeZones) {
         List<Carrier> carriersList = carrierRepository.findAll();
         for (Carrier carrier : carriersList) {
             List<Ticket> ticketListByCarrier = ticketRepository.findAllByCarrierAndOriginAndDestination(carrier.getId().toString(), origin_name, destination_name);
@@ -34,7 +34,9 @@ public class TicketService {
 //            System.out.println(findMinTime(ticketListByCarrier));
 
             try {
-                answerToFile(findMinTime(ticketListByCarrier));
+                answerToFile(carrierRepository.findById(Long.valueOf(ticketListByCarrier.get(0).getCarrier())).get().getName()
+                                + ": " +findMinTime(ticketListByCarrier, diffTimeZones));
+                // в конкретной задаче optional не будет пустой, проверку не стал добавлять
             } catch (IOException e) {
                 log.error("answerToFile in minTimeTask error: " + e);
             }
@@ -54,11 +56,11 @@ public class TicketService {
         }
     }
 
-    public String findMinTime(List<Ticket> ticketList) {
+    public LocalTime findMinTime(List<Ticket> ticketList, int diffTimeZones) {
         List<Duration> durationList = new ArrayList<>();
         for (Ticket ticket : ticketList) {
             LocalDateTime localDateTimeDeparture = LocalDateTime.of(ticket.getDeparture_date(), ticket.getDeparture_time());
-            LocalDateTime localDateTimeArrival = LocalDateTime.of(ticket.getArrival_date(), ticket.getArrival_time()).plusHours(7);
+            LocalDateTime localDateTimeArrival = LocalDateTime.of(ticket.getArrival_date(), ticket.getArrival_time()).plusHours(diffTimeZones);
             Duration flightTime = Duration.between(localDateTimeDeparture, localDateTimeArrival);
             durationList.add(flightTime);
         }
@@ -70,8 +72,8 @@ public class TicketService {
         }
         int hours = Integer.parseInt(min.toMinutes() / 60 + "");
         int minutes = Integer.parseInt(min.toMinutes() % 60 + "");
-        return carrierRepository.findById(Long.valueOf(ticketList.get(0).getCarrier())).get().getName() + ": " + LocalTime.of(hours, minutes);
-        // в конкретной задаче optional не будет пустой, проверку не стал добавлять
+
+        return LocalTime.of(hours, minutes);
     }
 
     private void answerToFile(String answer) throws IOException {
